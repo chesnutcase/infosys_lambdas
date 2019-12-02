@@ -1,0 +1,19 @@
+Resources:
+  InfosysLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: endpoints.MultiPartTest::handleRequest
+      Runtime: java11
+      CodeUri: .
+      Events:
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+  InfosysApi:
+    Type: AWS::Serverless:Api
+    Properties:
+      StageName: local
+      BinaryMediaTypes:
+        - multipart~1form-data
