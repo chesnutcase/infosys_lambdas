@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  face_trainer
+
+  Sample SAM Template for face_trainer
+
+Parameters:
+  CollectionId:
+    Type: String
+    Description: Name of collection to dump faces to
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 15
+
+Resources:
+  FaceTrainerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: face_trainer/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Environment:
+        Variables:
+          COLLECTION_ID: !Ref CollectionId
+      Policies:
+        - RekognitionDetectOnlyPolicy: {}
+        - RekognitionWriteOnlyAccessPolicy:
+            CollectionId: !Ref CollectionId
+
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  FaceTrainerFunction:
+    Description: "FaceTrainer Lambda Function ARN"
+    Value: !GetAtt FaceTrainerFunction.Arn
+  FaceTrainerFunctionRole:
+    Description: "Implicit IAM Role created for FaceTrainer function"
+    Value: !GetAtt FaceTrainerFunctionRole.Arn
