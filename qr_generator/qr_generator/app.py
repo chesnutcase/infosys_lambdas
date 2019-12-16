@@ -15,6 +15,10 @@ def lambda_handler(event, context):
         output = CuteR.produce(
             event.get("secret"), "oka.png", colourful=(event.get("colorful", False))
         )
+    elif event.get("mode") == "norman":
+        output = CuteR.produce(
+            event.get("secret"), "norman.png", colourful=(event.get("colorful", False))
+        )
     else:
         output = CuteR.produce(event.get("secret"), "white.png")
     f = io.BytesIO()

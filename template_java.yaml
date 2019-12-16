@@ -2,7 +2,7 @@ Resources:
   InfosysLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: endpoints.MultiPartTest::handleRequest
+      Handler: endpoints.RequestDump::handleRequest
       Runtime: java11
       CodeUri: .
       Events:

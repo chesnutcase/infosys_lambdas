@@ -6,11 +6,12 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import controllers.AbstractController;
+import framework.controllers.AbstractController;
 import controllers.PotatoController;
 
 import java.lang.reflect.Constructor;
@@ -65,12 +66,13 @@ public class MainEndpoint implements RequestHandler<APIGatewayProxyRequestEvent,
             response.setStatusCode(500);
             ObjectMapper om = new ObjectMapper();
             ObjectNode body = om.createObjectNode();
+            
             body.put("status", 500);
             body.put("error", e.toString());
             ArrayNode traceArrayNode = om.createArrayNode();
-            List<TextNode> stackTraceArray = Arrays.stream(e.getStackTrace()).map(i -> body.textNode(i.toString())).collect(Collectors.toList());
+            List<TextNode> stackTraceArray = Arrays.stream(e.getStackTrace()).map(i -> new TextNode(i.toString())).collect(Collectors.toList());
             traceArrayNode.addAll(stackTraceArray);
-            body.put("trace", traceArrayNode);
+            body.set("trace", traceArrayNode);
             try {
                 response.setBody(om.writeValueAsString(body));
             } catch (JsonProcessingException ex) {

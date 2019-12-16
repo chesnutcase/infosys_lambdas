@@ -78,11 +78,9 @@ public class MultiPartTest implements RequestHandler<APIGatewayProxyRequestEvent
 
             //Loop through each segment
             while (nextPart) {
-                String header = multipartStream.readHeaders();
-
-                //Log header for debugging
-                logger.log("Headers:");
-                logger.log(header);
+                String headerPart = multipartStream.readHeaders();
+                String[] headers = headerPart.split("\r\n");
+                
 
                 //Write out the file to our ByteArrayOutputStream
                 multipartStream.readBodyData(out);
